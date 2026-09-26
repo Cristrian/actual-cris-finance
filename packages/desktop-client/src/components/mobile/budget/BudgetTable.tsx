@@ -59,6 +59,24 @@ export function getColumnWidth({
   return show3Columns ? `${35 + offset}vw` : `${45 + offset}vw`;
 }
 
+// Horizontal padding a bare Button adds around the pill text (5px per side).
+const PILL_HORIZONTAL_PADDING = 10;
+// Space kept between adjacent amounts so large values never touch or overlap.
+const AMOUNT_GAP = 4;
+
+// Widest an amount (or the pill around it) may get within its column.
+export function getAmountMaxWidth({
+  show3Columns = false,
+}: { show3Columns?: boolean } = {}) {
+  return `calc(${getColumnWidth({ show3Columns })} - ${AMOUNT_GAP}px)`;
+}
+
+export function getPillTextMaxWidth({
+  show3Columns = false,
+}: { show3Columns?: boolean } = {}) {
+  return `calc(${getColumnWidth({ show3Columns })} - ${AMOUNT_GAP + PILL_HORIZONTAL_PADDING}px)`;
+}
+
 type ToBudgetProps = {
   toBudget: Binding<'envelope-budget', 'to-budget'>;
   onPress: () => void;
@@ -435,6 +453,7 @@ function BudgetTableHeader({
     textAlign: 'right',
     fontSize: 12,
     fontWeight: '500',
+    maxWidth: getAmountMaxWidth({ show3Columns }),
   };
 
   return (

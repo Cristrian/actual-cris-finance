@@ -163,6 +163,7 @@ function ExpenseCategoryCells({
           category={category}
           month={month}
           onBudgetAction={onBudgetAction}
+          show3Columns={show3Columns}
         />
       </View>
       <View

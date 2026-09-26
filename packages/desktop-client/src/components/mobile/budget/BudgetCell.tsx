@@ -22,7 +22,11 @@ import { pushModal } from '#modals/modalsSlice';
 import { useDispatch } from '#redux';
 import type { SheetFields } from '#spreadsheet';
 
-import { getColumnWidth, PILL_STYLE } from './BudgetTable';
+import {
+  getAmountMaxWidth,
+  getPillTextMaxWidth,
+  PILL_STYLE,
+} from './BudgetTable';
 
 type BudgetCellProps<
   SheetFieldName extends SheetFields<'envelope-budget' | 'tracking-budget'>,
@@ -32,6 +36,7 @@ type BudgetCellProps<
   category: CategoryEntity;
   month: string;
   onBudgetAction: (month: string, action: string, args: unknown) => void;
+  show3Columns?: boolean;
 };
 
 export function BudgetCell<
@@ -41,12 +46,14 @@ export function BudgetCell<
   category,
   month,
   onBudgetAction,
+  show3Columns,
   children,
   ...props
 }: BudgetCellProps<SheetFieldName>) {
   const { t } = useTranslation();
   const locale = useLocale();
-  const columnWidth = getColumnWidth();
+  const pillMaxWidth = getAmountMaxWidth({ show3Columns });
+  const textMaxWidth = getPillTextMaxWidth({ show3Columns });
   const dispatch = useDispatch();
   const format = useFormat();
   const { showUndoNotification } = useUndo();
@@ -190,7 +197,7 @@ export function BudgetCell<
             variant="bare"
             style={{
               ...PILL_STYLE,
-              maxWidth: columnWidth,
+              maxWidth: pillMaxWidth,
               ...makeAmountGrey(value),
             }}
             onPress={onOpenCategoryBudgetMenu}
@@ -207,7 +214,7 @@ export function BudgetCell<
                 mode="oneline"
                 style={{
                   ...styles.tnum,
-                  maxWidth: columnWidth,
+                  maxWidth: textMaxWidth,
                   textAlign: 'right',
                   fontSize: 12,
                 }}
