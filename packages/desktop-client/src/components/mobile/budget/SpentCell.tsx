@@ -19,7 +19,11 @@ import { useCategoryScheduleGoalTemplateIndicator } from '#hooks/useCategorySche
 import { useFormat } from '#hooks/useFormat';
 import type { Binding } from '#spreadsheet';
 
-import { getColumnWidth, PILL_STYLE } from './BudgetTable';
+import {
+  getAmountMaxWidth,
+  getPillTextMaxWidth,
+  PILL_STYLE,
+} from './BudgetTable';
 
 type SpentCellProps = {
   binding: Binding<'envelope-budget' | 'tracking-budget', 'sum-amount'>;
@@ -38,9 +42,8 @@ export function SpentCell({
 }: SpentCellProps) {
   const { t } = useTranslation();
   const format = useFormat();
-  const columnWidth = getColumnWidth({
-    show3Columns,
-  });
+  const pillMaxWidth = getAmountMaxWidth({ show3Columns });
+  const textMaxWidth = getPillTextMaxWidth({ show3Columns });
 
   const { schedule, scheduleStatus, isScheduleRecurring } =
     useCategoryScheduleGoalTemplateIndicator({
@@ -62,6 +65,7 @@ export function SpentCell({
             variant="bare"
             style={{
               ...PILL_STYLE,
+              maxWidth: pillMaxWidth,
             }}
             onPress={onPress}
             aria-label={t('Show transactions for {{categoryName}} category', {
@@ -78,7 +82,7 @@ export function SpentCell({
                 style={{
                   ...styles.tnum,
                   ...makeAmountGrey(value),
-                  maxWidth: columnWidth,
+                  maxWidth: textMaxWidth,
                   textAlign: 'right',
                   fontSize: 12,
                 }}

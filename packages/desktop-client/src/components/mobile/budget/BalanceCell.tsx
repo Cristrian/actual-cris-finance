@@ -18,7 +18,11 @@ import { useSyncedPref } from '#hooks/useSyncedPref';
 import type { Binding } from '#spreadsheet';
 import { envelopeBudget, trackingBudget } from '#spreadsheet/bindings';
 
-import { getColumnWidth, PILL_STYLE } from './BudgetTable';
+import {
+  getAmountMaxWidth,
+  getPillTextMaxWidth,
+  PILL_STYLE,
+} from './BudgetTable';
 
 type BalanceCellProps = {
   binding: Binding<
@@ -40,9 +44,8 @@ export function BalanceCell({
 }: BalanceCellProps) {
   const { t } = useTranslation();
   const [budgetType = 'envelope'] = useSyncedPref('budgetType');
-  const columnWidth = getColumnWidth({
-    show3Columns,
-  });
+  const pillMaxWidth = getAmountMaxWidth({ show3Columns });
+  const textMaxWidth = getPillTextMaxWidth({ show3Columns });
 
   const goal =
     budgetType === 'tracking'
@@ -84,7 +87,7 @@ export function BalanceCell({
           variant="bare"
           style={{
             ...PILL_STYLE,
-            maxWidth: columnWidth,
+            maxWidth: pillMaxWidth,
           }}
           onPress={onPress}
           aria-label={ariaLabel}
@@ -100,7 +103,7 @@ export function BalanceCell({
                 defaultClassName,
                 css({
                   ...styles.tnum,
-                  maxWidth: columnWidth,
+                  maxWidth: textMaxWidth,
                   textAlign: 'right',
                   fontSize: 12,
                 }),
